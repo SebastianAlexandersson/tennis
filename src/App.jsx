@@ -1,10 +1,12 @@
 import React from 'react';
-import globalStyle from './app.css';
+import './app.css';
+import Scoreboard from './components/Scoreboard';
 
 function App() {
   return (
     <div>
-      Hello World!
+      <h1>Tennis Scoring System</h1>
+      <Scoreboard />
     </div>
   );
 }
