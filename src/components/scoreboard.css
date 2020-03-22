@@ -15,6 +15,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .footer,
@@ -72,4 +73,12 @@
   grid-column-end: 4;
   width: 100%;
   font-weight: bold;
+}
+
+.deuce {
+  position: absolute;
+  top: 1em;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2em;
 }

@@ -67,7 +67,6 @@ function Scoreboard() {
 
     if (score === 3 && opponentScore === 4) {
       dispatch({ type: 'decrement', player: opponent, scoreType: 'score' });
-      dispatch({ type: 'increment', player, scoreType: 'score' });
       return;
     }
 
@@ -94,6 +93,11 @@ function Scoreboard() {
         <span>{scoreFormat[state.playerOne.score]}</span>
       </div>
       <div className="currentSetScore">
+        {
+          state.playerOne.score === 3
+          && state.playerTwo.score === 3
+          && <span className="deuce">DEUCE</span>
+        }
         <h3>Games</h3>
         <div>
           <span>{state.playerOne.games}</span>
