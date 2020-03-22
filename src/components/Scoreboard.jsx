@@ -1,118 +1,24 @@
 import React, { useReducer } from 'react';
 import Button from './Button';
+import utils from '../utils';
+import { reducer, initialState } from '../state/scoreReducer';
 
-const initialState = {
-  playerOne: {
-    score: 0,
-    games: 0,
-    sets: 0,
-  },
-  playerTwo: {
-    score: 0,
-    games: 0,
-    sets: 0,
-  },
-  isDeuce: false,
-  gameOver: false,
-  winner: '',
-  sets: [],
-};
-
-function reducer(state, action) {
-  switch (action.type) {
-    case 'increment':
-      return {
-        ...state,
-        [action.player]: {
-          ...state[action.player],
-          [action.scoreType]: state[action.player][action.scoreType] + 1,
-        },
-      };
-    case 'decrement':
-      return {
-        ...state,
-        [action.player]: {
-          ...state[action.player],
-          [action.scoreType]: state[action.player][action.scoreType] - 1,
-        },
-      };
-    case 'recordSet':
-      return {
-        ...state,
-        sets: [...state.sets, {
-          set: state.sets.length + 1,
-          playerOne: state.playerOne.games,
-          playerTwo: state.playerTwo.games,
-        }],
-      };
-    case 'winner':
-      return { ...state, winner: action.player };
-    case 'gameOver':
-      return { ...state, gameOver: true };
-    case 'resetScore':
-      return {
-        ...state,
-        playerOne: {
-          ...state.playerOne,
-          score: 0,
-        },
-        playerTwo: {
-          ...state.playerTwo,
-          score: 0,
-        },
-      };
-    case 'resetGames':
-      return {
-        ...state,
-        playerOne: {
-          ...state.playerOne,
-          games: 0,
-        },
-        playerTwo: {
-          ...state.playerTwo,
-          games: 0,
-        },
-      };
-    case 'resetFull':
-      return initialState;
-    default:
-      throw new Error();
-  }
-}
+const { scoreFormat } = utils;
 
 function Scoreboard() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const scoreFormat = {
-    0: '0',
-    1: '15',
-    2: '30',
-    3: '40',
-    4: 'A',
-  };
+  function calcSets(player) {
+    const { sets } = state[player];
 
-  function calcScore(player) {
-    const { score } = state[player];
-    const opponent = player === 'playerOne' ? 'playerTwo' : 'playerOne';
-    const opponentScore = state[opponent].score;
-
-    if (score === 3 && opponentScore < 3 || score === 4) {
-      calcGames(player);
+    if (sets === 2) {
+      dispatch({ type: 'increment', player, scoreType: 'sets' });
+      dispatch({ type: 'gameOver' });
+      dispatch({ type: 'winner', player });
       return;
     }
 
-    if (score === 4) {
-      calcGames(player);
-      return;
-    }
-
-    if (score === 3 && opponentScore === 4) {
-      dispatch({ type: 'decrement', player: opponent, scoreType: 'score' });
-      dispatch({ type: 'increment', player, scoreType: 'score' });
-      return;
-    }
-
-    dispatch({ type: 'increment', player, scoreType: 'score' });
+    dispatch({ type: 'increment', player, scoreType: 'sets' });
   }
 
   function calcGames(player) {
@@ -141,17 +47,30 @@ function Scoreboard() {
     dispatch({ type: 'increment', player, scoreType: 'games' });
   }
 
-  function calcSets(player) {
-    const { sets } = state[player];
+  function calcScore(player) {
+    const { score } = state[player];
+    const opponent = player === 'playerOne' ? 'playerTwo' : 'playerOne';
+    const opponentScore = state[opponent].score;
 
-    if (sets == 2) {
-      dispatch({ type: 'increment', player, scoreType: 'sets' });
-      dispatch({ type: 'gameOver' });
-      dispatch({ type: 'winner', player });
+    if (score === 3 && opponentScore < 3) {
+      dispatch({ type: 'recordGames' });
+      calcGames(player);
       return;
     }
 
-    dispatch({ type: 'increment', player, scoreType: 'sets' });
+    if (score === 4) {
+      dispatch({ type: 'recordGames' });
+      calcGames(player);
+      return;
+    }
+
+    if (score === 3 && opponentScore === 4) {
+      dispatch({ type: 'decrement', player: opponent, scoreType: 'score' });
+      dispatch({ type: 'increment', player, scoreType: 'score' });
+      return;
+    }
+
+    dispatch({ type: 'increment', player, scoreType: 'score' });
   }
 
   return (
