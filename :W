@@ -105,24 +105,12 @@ function Scoreboard() {
         <span>{scoreFormat[state.playerTwo.score]}</span>
       </div>
       <div className="footer">
-        <div className="footerBox">
-          <div className="top">
-            <span>Player 1</span>
-          </div>
-          <div className="bottom">
-            <span>Player 2</span>
-          </div>
+        <div className="top">
+          <span>Player 1</span>
         </div>
-        {state.sets.map((set) => (
-          <div className="footerBox" key={set.set + 1}>
-            <div className="top">
-              <span>{set.playerOne}</span>
-            </div>
-            <div className="bottom">
-              <span>{set.playerTwo}</span>
-            </div>
-          </div>
-        ))}
+        <div className="bottom">
+          <span>Player 2</span>
+        </div>
       </div>
       <div className="buttons">
         <Button
@@ -136,11 +124,6 @@ function Scoreboard() {
           disabled={state.gameOver}
         />
       </div>
-      <Button
-        onClick={() => dispatch({ type: 'resetFull' })}
-        label="Reset"
-        id="reset"
-      />
     </div>
   );
 }

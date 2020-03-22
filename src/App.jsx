@@ -4,10 +4,10 @@ import Scoreboard from './components/Scoreboard';
 
 function App() {
   return (
-    <div>
+    <>
       <h1>Tennis Scoring System</h1>
       <Scoreboard />
-    </div>
+    </>
   );
 }
 
