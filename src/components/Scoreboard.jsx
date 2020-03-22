@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react';
+import { reducer, initialState } from '../state/scoreReducer';
 import Button from './Button';
 import utils from '../utils';
-import { reducer, initialState } from '../state/scoreReducer';
 import './scoreboard.css';
 
 const { scoreFormat } = utils;
@@ -12,6 +12,7 @@ function Scoreboard() {
   function calcSets(player) {
     const { sets } = state[player];
 
+    // Best of 5 sets, first one to 3 wins.
     if (sets === 2) {
       dispatch({ type: 'increment', player, scoreType: 'sets' });
       dispatch({ type: 'gameOver' });
@@ -19,6 +20,7 @@ function Scoreboard() {
       return;
     }
 
+    // Default add 1 to players set score.
     dispatch({ type: 'increment', player, scoreType: 'sets' });
   }
 
@@ -27,8 +29,10 @@ function Scoreboard() {
     const opponent = player === 'playerOne' ? 'playerTwo' : 'playerOne';
     const opponentGames = state[opponent].games;
 
+    // Reset score for next game.
     dispatch({ type: 'resetScore' });
 
+    // Win set if games score is 6 and more then 1 point above opponents game score.
     if (games >= 5 && games - opponentGames >= 1) {
       dispatch({ type: 'increment', player, scoreType: 'games' });
       dispatch({ type: 'recordSet' });
@@ -37,6 +41,7 @@ function Scoreboard() {
       return;
     }
 
+    // Tie breaker. Sudden death.
     if (games === 6 && opponentGames === 6) {
       dispatch({ type: 'increment', player, scoreType: 'games' });
       dispatch({ type: 'recordSet' });
@@ -45,6 +50,7 @@ function Scoreboard() {
       return;
     }
 
+    // Default add 1 to players game score.
     dispatch({ type: 'increment', player, scoreType: 'games' });
   }
 
@@ -53,23 +59,27 @@ function Scoreboard() {
     const opponent = player === 'playerOne' ? 'playerTwo' : 'playerOne';
     const opponentScore = state[opponent].score;
 
+    // If at 40 points and opponent at less then 40 points, win game.
     if (score === 3 && opponentScore < 3) {
       dispatch({ type: 'recordGames' });
       calcGames(player);
       return;
     }
 
+    // If at advantage and win point, win game.
     if (score === 4) {
       dispatch({ type: 'recordGames' });
       calcGames(player);
       return;
     }
 
+    // Reset to deuce if win point and opponent is at advantage.
     if (score === 3 && opponentScore === 4) {
       dispatch({ type: 'decrement', player: opponent, scoreType: 'score' });
       return;
     }
 
+    // Default add 1 to players score.
     dispatch({ type: 'increment', player, scoreType: 'score' });
   }
 

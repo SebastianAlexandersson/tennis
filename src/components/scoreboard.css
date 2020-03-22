@@ -6,7 +6,9 @@
   color: #fff;
   font-weight: bold;
   grid-template-columns: 2fr 1fr 2fr;
-  grid-template-rows: 5em 15em 5em 2.9em 2.9em;
+  /*grid-template-rows: 5em 15em 5em 2.9em 2.9em;*/
+  grid-template-rows: 2fr 6fr 2fr 1fr 1fr;
+  margin: auto;
 }
 
 .setScore,
