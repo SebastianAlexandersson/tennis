@@ -1,5 +1,4 @@
-# tennis
-Tennis Scoring System
+# Tennis scoring system 
 
 Live demo: https://sebastianalexandersson.github.io/tennis/
 
