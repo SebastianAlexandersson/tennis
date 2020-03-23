@@ -1,7 +1,7 @@
 .scoreboard {
   display: grid;
   width: 800px;
-  max-width: 800px;
+  max-width: 100%;
   background-color: black;
   color: #fff;
   font-weight: bold;
@@ -54,7 +54,10 @@
 
 .top,
 .bottom {
-  padding: .75em;
+  height: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .top {
@@ -83,4 +86,10 @@
   left: 50%;
   transform: translateX(-50%);
   font-size: 2em;
+}
+
+@media (max-width: 800px) {
+  .deuce {
+    font-size: 1em;
+  }
 }
